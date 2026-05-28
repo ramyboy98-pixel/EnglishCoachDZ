@@ -21,18 +21,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Assignment
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -49,8 +41,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -70,13 +62,14 @@ private val DarkText = Color(0xFF1C2230)
 private val SoftText = Color(0xFF69707D)
 private val SoftLine = Color(0xFFE2E6EC)
 private val SoftGreen = Color(0xFF2F7D5A)
+private val SoftOrange = Color(0xFFE08A22)
 
-private enum class Screen(val title: String, val icon: ImageVector) {
-    Home("Home", Icons.Filled.Home),
-    Lessons("Lessons", Icons.Filled.MenuBook),
-    Practice("Practice", Icons.Filled.Assignment),
-    Progress("Progress", Icons.Filled.TrendingUp),
-    Profile("Profile", Icons.Filled.AccountCircle)
+private enum class Screen(val title: String, val mark: String) {
+    Home("Home", "H"),
+    Lessons("Lessons", "L"),
+    Practice("Practice", "P"),
+    Progress("Progress", "G"),
+    Profile("Profile", "U")
 }
 
 @Composable
@@ -125,14 +118,14 @@ private fun HomeScreen(
             .padding(horizontal = 22.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { Spacer(modifier = Modifier.height(6.dp)) }
+        item { Spacer(modifier = Modifier.height(10.dp)) }
 
         item {
             Column {
                 Text(
                     text = "English Coach DZ",
                     color = DarkText,
-                    fontSize = 33.sp,
+                    fontSize = 31.sp,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 0.2.sp
                 )
@@ -153,9 +146,9 @@ private fun HomeScreen(
                 Text(
                     "A2+ / Early B1",
                     color = DarkText,
-                    fontSize = 32.sp,
+                    fontSize = 31.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 1.sp
+                    letterSpacing = 0.8.sp
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 LinearProgressIndicator(
@@ -175,15 +168,7 @@ private fun HomeScreen(
         item {
             CoachCard {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(46.dp)
-                            .clip(CircleShape)
-                            .background(PrimaryBlue.copy(alpha = 0.12f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = PrimaryBlue)
-                    }
+                    CircleMark(text = "▶", color = PrimaryBlue)
                     Spacer(modifier = Modifier.width(14.dp))
                     Column {
                         Text("Today's Lesson", color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
@@ -221,14 +206,14 @@ private fun HomeScreen(
                 SmallActionCard(
                     title = "Test",
                     subtitle = "Check your level",
-                    icon = Icons.Filled.Assignment,
+                    mark = "T",
                     modifier = Modifier.weight(1f),
                     onClick = onOpenTest
                 )
                 SmallActionCard(
                     title = "Progress",
                     subtitle = "See weak points",
-                    icon = Icons.Filled.TrendingUp,
+                    mark = "P",
                     modifier = Modifier.weight(1f),
                     onClick = onOpenProgress
                 )
@@ -239,13 +224,13 @@ private fun HomeScreen(
             CoachCard {
                 Text("Focus for Today", color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
                 Spacer(modifier = Modifier.height(14.dp))
-                Text("• Avoid repeating the same sentence structure.", color = SoftText, fontSize = 16.sp, lineHeight = 26.sp)
-                Text("• Use connectors: then, after that, sometimes, because.", color = SoftText, fontSize = 16.sp, lineHeight = 26.sp)
-                Text("• Write short paragraphs, not long broken sentences.", color = SoftText, fontSize = 16.sp, lineHeight = 26.sp)
+                BulletText("Avoid repeating the same sentence structure.")
+                BulletText("Use connectors: then, after that, sometimes, because.")
+                BulletText("Write short paragraphs, not long broken sentences.")
             }
         }
 
-        item { Spacer(modifier = Modifier.height(20.dp)) }
+        item { Spacer(modifier = Modifier.height(22.dp)) }
     }
 }
 
@@ -275,6 +260,14 @@ private fun PracticeScreen() {
             Spacer(modifier = Modifier.height(16.dp))
             Text("Correction engine: basic rules enabled", color = PrimaryBlue, fontSize = 15.sp, fontWeight = FontWeight.Bold)
         }
+        CoachCard {
+            Text("Common Mistakes", color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(modifier = Modifier.height(10.dp))
+            BulletText("go back to home → go back home")
+            BulletText("have a dinner → have dinner")
+            BulletText("talk English → speak English")
+            BulletText("sometime → sometimes")
+        }
     }
 }
 
@@ -283,6 +276,7 @@ private fun ProgressScreen() {
     SimplePage(title = "Progress", subtitle = "Your current learning profile") {
         CoachCard {
             Text("Current Level", color = SoftText, fontSize = 15.sp)
+            Spacer(modifier = Modifier.height(8.dp))
             Text("A2+ / Early B1", color = DarkText, fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
             Spacer(modifier = Modifier.height(18.dp))
             LinearProgressIndicator(
@@ -298,9 +292,16 @@ private fun ProgressScreen() {
         CoachCard {
             Text("Weak Points", color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
             Spacer(modifier = Modifier.height(10.dp))
-            Text("• Punctuation and sentence breaks", color = SoftText, fontSize = 16.sp, lineHeight = 26.sp)
-            Text("• Natural expressions", color = SoftText, fontSize = 16.sp, lineHeight = 26.sp)
-            Text("• Paragraph building", color = SoftText, fontSize = 16.sp, lineHeight = 26.sp)
+            BulletText("Punctuation and sentence breaks")
+            BulletText("Natural expressions")
+            BulletText("Paragraph building")
+        }
+        CoachCard {
+            Text("Strong Points", color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(modifier = Modifier.height(10.dp))
+            BulletText("Basic grammar")
+            BulletText("Daily routine vocabulary")
+            BulletText("Clear simple sentences")
         }
     }
 }
@@ -318,6 +319,11 @@ private fun ProfileScreen() {
             Spacer(modifier = Modifier.height(10.dp))
             Text("45 minutes per day", color = SoftText, fontSize = 17.sp)
         }
+        CoachCard {
+            Text("Path", color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text("A2+ → B1 Communication Course", color = SoftText, fontSize = 17.sp)
+        }
     }
 }
 
@@ -334,7 +340,7 @@ private fun SimplePage(
             .padding(horizontal = 22.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item { Spacer(modifier = Modifier.height(10.dp)) }
         item {
             Column {
                 Text(title, color = DarkText, fontSize = 34.sp, fontWeight = FontWeight.ExtraBold)
@@ -347,7 +353,7 @@ private fun SimplePage(
                 content()
             }
         }
-        item { Spacer(modifier = Modifier.height(20.dp)) }
+        item { Spacer(modifier = Modifier.height(22.dp)) }
     }
 }
 
@@ -392,7 +398,7 @@ private fun CoachCard(content: @Composable Column.() -> Unit) {
 private fun SmallActionCard(
     title: String,
     subtitle: String,
-    icon: ImageVector,
+    mark: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -410,7 +416,7 @@ private fun SmallActionCard(
                 .padding(18.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(icon, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(28.dp))
+            CircleMark(text = mark, color = PrimaryBlue, size = 34)
             Column {
                 Text(title, color = DarkText, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
                 Spacer(modifier = Modifier.height(8.dp))
@@ -418,6 +424,35 @@ private fun SmallActionCard(
             }
         }
     }
+}
+
+@Composable
+private fun CircleMark(text: String, color: Color, size: Int = 46) {
+    Box(
+        modifier = Modifier
+            .size(size.dp)
+            .clip(CircleShape)
+            .background(color.copy(alpha = 0.12f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = color,
+            fontSize = if (size >= 46) 18.sp else 14.sp,
+            fontWeight = FontWeight.ExtraBold,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun BulletText(text: String) {
+    Text(
+        text = "• $text",
+        color = SoftText,
+        fontSize = 16.sp,
+        lineHeight = 26.sp
+    )
 }
 
 @Composable
@@ -430,12 +465,19 @@ private fun BottomNavigationBar(
         containerColor = CardWhite,
         tonalElevation = 10.dp
     ) {
-        Screen.values().forEach { screen ->
+        Screen.entries.forEach { screen ->
             NavigationBarItem(
                 selected = currentScreen == screen,
                 onClick = { onScreenSelected(screen) },
-                icon = { Icon(screen.icon, contentDescription = screen.title) },
-                label = { Text(screen.title, fontSize = 11.sp) },
+                icon = {
+                    Text(
+                        text = screen.mark,
+                        color = if (currentScreen == screen) PrimaryBlue else SoftText,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 14.sp
+                    )
+                },
+                label = { Text(screen.title, fontSize = 10.sp) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = PrimaryBlue,
                     selectedTextColor = PrimaryBlue,
